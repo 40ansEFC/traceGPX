@@ -4,22 +4,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirection en cours...</title>
+    <title>Téléchargement en cours...</title>
 
     <link rel="stylesheet" href="../style.css">
-
-    <meta http-equiv="refresh"
-        content="0; url=https://drive.google.com/file/d/1tMtjeKfmj8a2x7-tSva1zLwAdx-rORHy/view?usp=sharing">
 </head>
 
 <body>
-    <p>Téléchargement de la trace en cours...</p>
+    <img src="../assets/logo.png" alt="Logo" class="logo">
 
-    <p>Si rien ne se passe, <br>
-        <a href="https://drive.google.com/file/d/1tMtjeKfmj8a2x7-tSva1zLwAdx-rORHy/view?usp=sharing">
-            Cliquez ici pour télécharger
+    <p>Si le téléchargement ne se lance pas automatiquement, <br><br>
+        <a id="download-link" href="#">
+            cliquez ici pour télécharger
         </a>
     </p>
+
+    <script>
+        // Mettez le lien Google Drive ici 
+        const fileUrl = "https://drive.google.com/file/d/1tMtjeKfmj8a2x7-tSva1zLwAdx-rORHy/view?usp=sharing";
+
+        document.getElementById("download-link").href = fileUrl;
+
+        setTimeout(() => {
+            window.location.href = fileUrl;
+        }, 500); 
+    </script>
 </body>
 
 </html>
