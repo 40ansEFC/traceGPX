@@ -1,6 +1,6 @@
 import os
 import qrcode
-import qrcode.image.svg
+from PIL import Image
 
 DIRECTORY = "qrcode"
 
@@ -22,7 +22,6 @@ for item in os.listdir(base_dir):
             
         url = f"https://40ansefc.github.io/traceGPX/{folder_name}"
         
-        
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -32,35 +31,43 @@ for item in os.listdir(base_dir):
         qr.add_data(url)
         qr.make(fit=True)
         
+        img = qr.make_image(fill_color="black", back_color="white")
         
-        img_png = qr.make_image(fill_color="black", back_color="white")
-        png_filename = f"{folder_name}.png"
-        img_png.save(os.path.join(base_dir, DIRECTORY, png_filename))
+        img_pil = img.get_image()
         
+        img_pil = img_pil.convert("RGB")
         
+        img_resized = img_pil.resize((1500, 1500), Image.Resampling.NEAREST)
         
-        factory = qrcode.image.svg.SvgPathImage
-        img_svg = qr.make_image(image_factory=factory)
+        jpg_filename = f"{folder_name}.jpg"
+        jpg_filepath = os.path.join(base_dir, DIRECTORY, jpg_filename)
+        img_resized.save(jpg_filepath, format="JPEG", quality=100)
         
-        svg_filename = f"{folder_name}.svg"
-        svg_filepath = os.path.join(base_dir, DIRECTORY, svg_filename)
-        img_svg.save(svg_filepath)
+        print(f"✅ QR code généré pour '{folder_name}' -> {jpg_filename} (1500x1500px)")
+
+url = f"https://40ansefc.github.io/traceGPX"
         
-        
-        with open(svg_filepath, "r", encoding="utf-8") as file:
-            svg_content = file.read()
-        
-        
-        svg_content = svg_content.replace(
-            "<svg ", 
-            '<svg style="background-color: white;" shape-rendering="crispEdges" ', 
-            1
-        )
-        
-        with open(svg_filepath, "w", encoding="utf-8") as file:
-            file.write(svg_content)
-        
-        
-        print(f"✅ QR codes générés pour '{folder_name}' -> {png_filename} & {svg_filename}")
+qr = qrcode.QRCode(
+    version=1,
+    error_correction=qrcode.constants.ERROR_CORRECT_L,
+    box_size=10,
+    border=4,
+)
+qr.add_data(url)
+qr.make(fit=True)
+
+img = qr.make_image(fill_color="black", back_color="white")
+
+img_pil = img.get_image()
+
+img_pil = img_pil.convert("RGB")
+
+img_resized = img_pil.resize((1500, 1500), Image.Resampling.NEAREST)
+
+jpg_filename = f"general.jpg"
+jpg_filepath = os.path.join(base_dir, DIRECTORY, jpg_filename)
+img_resized.save(jpg_filepath, format="JPEG", quality=100)
+
+print(f"✅ QR code généré pour 'general' -> {jpg_filename} (1500x1500px)")
 
 print("Opération terminée !")
